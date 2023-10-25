@@ -127,8 +127,23 @@
                 </div>
               </form>
         </div>
-    </div>
 
+    </div>
+    <div class="div-right">
+        <form id="form">
+            <h1>Balance Check</h1>
+            <div class="formcontainer">
+            <hr/>
+            <div class="container">
+              <label for="uname"><strong>Co-ordinator Address</strong></label>
+              <input type="text" id="caddrSub"  placeholder="Co-ordinator Contract Address" name="caddrSub" required>
+              <label for="uname"><strong>Subscription ID</strong></label>
+              <input type="text" id="subscriptionid1"  placeholder="Subscription ID" name="subscriptionid1" required>
+            </div>
+            <button type="submit" id="fetchBalance">Fetch Balance</button>
+            </div>
+          </form>
+    </div>
 
     <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="node_modules/xdc3/dist/web3.min.js"></script>

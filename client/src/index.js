@@ -4,11 +4,18 @@ const convertTokens = async (n) => {
 };
 const expectedBlockTime = 1000;
 
+const getCoOrdinator = async (web3, coordinator) => {
+  const data = await $.getJSON("./contracts/co-ordinator.json");
+  const netId = await web3.eth.net.getId();
+  const instance = new web3.eth.Contract(data, coordinator);
+  return instance;
+};
+
 function decimalToHex(decimalNumber, expectedLength = 64) {
   // Convert to hexadecimal and pad with zeros
   const hexValue = Math.abs(decimalNumber).toString(16).toUpperCase();
-  console.log("hexValue::::",hexValue);
-  return '0x' + '0'.repeat(expectedLength - hexValue.length) + hexValue;
+  console.log("hexValue::::", hexValue);
+  return "0x" + "0".repeat(expectedLength - hexValue.length) + hexValue;
 }
 
 const sleep = (milliseconds) => {
@@ -84,7 +91,7 @@ const transferPLI = (tokencontract, accounts) => {
 
     // Convert the string to bytes
     var stringValueBytes = decimalToHex(_subscriptionid);
-    console.log("stringValueBytes",stringValueBytes)
+    console.log("stringValueBytes", stringValueBytes);
 
     await tokencontract.methods
       .transferAndCall(_caddr, tokens, stringValueBytes)
@@ -93,6 +100,31 @@ const transferPLI = (tokencontract, accounts) => {
         const [txhash, status] = await getTxnStatus(transactionHash);
         console.log("txhashshshs", txhash, status);
       });
+  });
+};
+
+const getSubscriptionBalance = (web3, accounts) => {
+  let _caddr;
+  $("#caddrSub").on("change", (e) => {
+    _caddr = e.target.value;
+    console.log("_caddr", _caddr);
+  });
+  let _subscriptionid;
+  $("#subscriptionid1").on("change", (e) => {
+    _subscriptionid = e.target.value;
+    console.log("_subscriptionid", _subscriptionid);
+  });
+  $("#fetchBalance").on("click", async (e) => {
+    console.log("getSubscriptionBalance", accounts[0]);
+    e.preventDefault();
+    const contractinstance = await getCoOrdinator(web3, _caddr);
+    // Convert the string to bytes
+    var stringValueBytes = decimalToHex(_subscriptionid);
+    console.log("stringValueBytes", stringValueBytes);
+    let result = await contractinstance.methods
+      .getSubscription(stringValueBytes)
+      .call();
+    console.log("result value is ::::", result);
   });
 };
 
@@ -105,6 +137,7 @@ async function nodeOperatorApp() {
   console.log("tokencontract", tokencontract);
   approveInternalContractToTransfer(tokencontract, accounts);
   transferPLI(tokencontract, accounts);
+  getSubscriptionBalance(web3,accounts);
 }
 
 nodeOperatorApp();
