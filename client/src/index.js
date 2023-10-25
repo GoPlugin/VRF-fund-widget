@@ -6,7 +6,8 @@ const expectedBlockTime = 1000;
 
 function decimalToHex(decimalNumber, expectedLength = 64) {
   // Convert to hexadecimal and pad with zeros
-  const hexValue = decimalNumber.toString(16);
+  const hexValue = Math.abs(decimalNumber).toString(16).toUpperCase();
+  console.log("hexValue::::",hexValue);
   return '0x' + '0'.repeat(expectedLength - hexValue.length) + hexValue;
 }
 
